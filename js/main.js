@@ -8,95 +8,43 @@ const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `condit
 const DESCRIPTION = [`Fusce in nisi mattis`, `Donec eros lacus`, `Quisque ultricies egestas ligula`, `Maecenas dictum vel dui id luctus`, `In a vehicula metus`, `Sed sed ornare nisi`, `Nunc aliquet risus ut nisi`, `Donec facilisis vel tortor vel mollis`];
 const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
 
-let avatarNumber = [1, 2, 3, 4, 5, 6, 7, 8];
-let avatar = [];
-let address = [];
-let price = [];
-let rooms = [];
-let guests = [];
-let x = [];
-let y = [];
-let card = [];
 
-const shuffle = function (array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
+const getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-avatarNumber = shuffle(avatarNumber);
-
-const createRandomArray = function (array, min, max) {
-  for (let i = 0; i < 8; i++) {
-    let randomNamber = 0;
-    let newRandomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-    if (newRandomNumber === randomNamber) {
-      newRandomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-    } else {
-      array.push(newRandomNumber);
-      randomNamber = newRandomNumber;
-    }
-  }
-  return array;
-};
-
-price = createRandomArray(price, 1000, 100000);
-rooms = createRandomArray(rooms, 1, 8);
-guests = createRandomArray(guests, 1, 16);
-x = createRandomArray(x, 10, 1200);
-y = createRandomArray(y, 130, 630);
-
-const createRandomAddress = function (array) {
-  for (let i = 0; i < 8; i++) {
-    array.push(`${x[i]}, ${y[i]}`);
-  }
-  return array;
-};
-
-address = createRandomAddress(address);
-
-const createRandomAvatar = function (array) {
-  for (let i = 0; i < 8; i++) {
-    array.push(`img/avatars/user0` + avatarNumber[i] + `.png`);
-  }
-  return array;
-};
-
-avatar = createRandomAvatar(avatar);
-
-const createCardsArray = function (array) {
-  for (let i = 0; i < 8; i++) {
-    let cardObject = {
+const createCardsArray = function (count) {
+  const array = [];
+  for (let i = 0; i < count; i++) {
+    const locationX = getRandomNumber(0, 1000);
+    const locationY = getRandomNumber(130, 630);
+    array[i] = {
       author: {
-        avatar: avatar[i]
+        avatar: `img/avatars/user0${i + 1}.png`
       },
       offer: {
-        title: TITLE[i],
-        address: address[i],
-        price: price[i],
-        type: TYPE[i],
-        rooms: rooms[i],
-        guests: guests[i],
-        checkin: CHECKIN[i],
-        checkout: CHECKOUT[i],
-        features: FEATURES[i],
-        description: DESCRIPTION[i],
-        photos: PHOTOS[i]
+        title: TITLE[getRandomNumber(0, TITLE.length - 1)],
+        address: `${locationX}, ${locationY}`,
+        price: getRandomNumber(1000, 100000),
+        type: TYPE[getRandomNumber(0, TYPE.length - 1)],
+        rooms: getRandomNumber(1, 10),
+        guests: getRandomNumber(1, 20),
+        checkin: CHECKIN[getRandomNumber(0, CHECKIN.length - 1)],
+        checkout: CHECKOUT[getRandomNumber(0, CHECKOUT.length - 1)],
+        features: FEATURES.slice(0, getRandomNumber(0, FEATURES.length - 1)),
+        description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length - 1)],
+        photos: PHOTOS.slice(0, getRandomNumber(0, PHOTOS.length - 1))
       },
       location: {
-        x: x[i],
-        y: y[i]
+        x: locationX,
+        y: locationY
       }
     };
-    array.push(cardObject);
   }
   return array;
 };
 
-card = createCardsArray(card);
-
+const DATA = createCardsArray(8);
 
 const map = document.querySelector(`.map`);
 map.classList.remove(`map--faded`);
@@ -104,19 +52,19 @@ map.classList.remove(`map--faded`);
 const mapPins = map.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
-const renderPin = function () {
+const createPin = function (data) {
   const pinElement = pinTemplate.cloneNode(true);
-  for (let i = 0; i < card.length; i++) {
-    pinElement.style = `left: ${card[i].location.x + 200}px; top: ${card[i].location.y + 400}px;`;
-    pinElement.querySelector(`img`).src = card[i].author.avatar;
-    pinElement.querySelector(`img`).alt = `${card[i].offer.title}`;
-  }
+  pinElement.style.left = `${data.location.x}px`;
+  pinElement.style.top = `${data.location.y}px`;
+  pinElement.querySelector(`img`).src = data.author.avatar;
+  pinElement.querySelector(`img`).alt = data.offer.title;
   return pinElement;
 };
 
+const renderPins = function (container, data) {
+  data.forEach((element) => {
+    container.appendChild(createPin(element));
+  });
+};
 
-const fragment = document.createDocumentFragment();
-for (let i = 0; i < card.length; i++) {
-  fragment.appendChild(renderPin(card[i]));
-}
-mapPins.appendChild(fragment);
+renderPins(mapPins, DATA);
