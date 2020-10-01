@@ -74,7 +74,6 @@ const renderPins = function (container, data) {
 
 renderPins(mapPins, DATA);
 
-
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
 const createCard = function (data) {
