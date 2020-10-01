@@ -1,7 +1,12 @@
 'use strict';
 
 const TITLE = [`Fusce`, `Quisque`, `Maecenas`, `Donec`, `Proin`, `Phasellus`, `Nulla`, `Mauris`];
-const TYPE = [`palace`, `flat`, `house`, `bungalow`];
+const TYPE = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`
+};
 const CHECKIN = [`12:00`, `13:00`, `14:00`];
 const CHECKOUT = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
@@ -26,7 +31,7 @@ const createCardsArray = function (count) {
         title: TITLE[getRandomNumber(0, TITLE.length - 1)],
         address: `${locationX}, ${locationY}`,
         price: getRandomNumber(1000, 100000),
-        type: TYPE[getRandomNumber(0, TYPE.length - 1)],
+        type: TYPE[Object.keys(TYPE)[Math.floor(Math.random() * Object.keys(TYPE).length)]],
         rooms: getRandomNumber(1, 10),
         guests: getRandomNumber(1, 20),
         checkin: CHECKIN[getRandomNumber(0, CHECKIN.length - 1)],
@@ -68,3 +73,27 @@ const renderPins = function (container, data) {
 };
 
 renderPins(mapPins, DATA);
+
+
+const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+
+const createCard = function (data) {
+  const cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector(`.popup__title`).textContent = data.offer.title;
+  cardElement.querySelector(`.popup__text--address`).textContent = data.offer.address;
+  cardElement.querySelector(`.popup__text--price`).textContent = `${data.offer.price}P/ночь`;
+  cardElement.querySelector(`.popup__type`).textContent = data.offer.type;
+  cardElement.querySelector(`.popup__text--capacity`).textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
+  cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
+  cardElement.querySelector(`.popup__features`).textContent = data.offer.features;
+  cardElement.querySelector(`.popup__description`).textContent = data.offer.description;
+  cardElement.querySelector(`.popup__photos`).src = data.offer.photos;
+  cardElement.querySelector(`.popup__avatar`).src = data.author.avatar;
+  return cardElement;
+};
+
+const renderCards = function (container, data) {
+  container.appendChild(createCard(data[1]));
+};
+
+renderCards(mapPins, DATA);
