@@ -76,6 +76,30 @@ renderPins(mapPins, DATA);
 
 const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
+
+const renderFeatures = function (container, data) {
+  container.innerHTML = ``;
+  data.forEach((feature) => {
+    const featureCreateElement = document.createElement(`li`);
+    featureCreateElement.classList.add(`popup__feature`);
+    featureCreateElement.classList.add(`popup__feature--` + feature);
+    container.appendChild(featureCreateElement);
+  });
+};
+
+const renderPhotos = function (container, data) {
+  container.innerHTML = ``;
+  data.forEach((src) => {
+    const photoCreateElement = document.createElement(`img`);
+    photoCreateElement.classList.add(`popup__photo`);
+    photoCreateElement.setAttribute(`width`, `45`);
+    photoCreateElement.setAttribute(`height`, `45`);
+    photoCreateElement.src = src;
+    container.appendChild(photoCreateElement);
+  });
+};
+
+
 const createCard = function (data) {
   const cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector(`.popup__title`).textContent = data.offer.title;
@@ -84,15 +108,15 @@ const createCard = function (data) {
   cardElement.querySelector(`.popup__type`).textContent = data.offer.type;
   cardElement.querySelector(`.popup__text--capacity`).textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
   cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
-  cardElement.querySelector(`.popup__features`).textContent = data.offer.features;
+  renderFeatures(cardElement.querySelector(`.popup__features`), data.offer.features);
   cardElement.querySelector(`.popup__description`).textContent = data.offer.description;
-  cardElement.querySelector(`.popup__photos`).src = data.offer.photos;
+  renderPhotos(cardElement.querySelector(`.popup__photos`), data.offer.photos);
   cardElement.querySelector(`.popup__avatar`).src = data.author.avatar;
   return cardElement;
 };
 
-const renderCards = function (container, data) {
-  container.appendChild(createCard(data[1]));
+const renderCard = function (container) {
+  container.appendChild(createCard(DATA[0]));
 };
 
-renderCards(mapPins, DATA);
+renderCard(mapPins);
