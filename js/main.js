@@ -53,7 +53,6 @@ const createCardsArray = function (count) {
 const DATA = createCardsArray(8);
 
 const map = document.querySelector(`.map`);
-map.classList.remove(`map--faded`);
 
 const mapPins = map.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
@@ -121,6 +120,8 @@ const renderPins = function (container, data) {
 
 // renderCard(mapPins);
 
+const form = document.querySelector(`.ad-form`);
+
 const formFieldsets = document.querySelectorAll(`fieldset`);
 
 formFieldsets.forEach((el) => {
@@ -142,6 +143,8 @@ const activatePage = function (event) {
     mapFilters.forEach((el) => {
       el.removeAttribute(`disabled`, `disabled`);
     });
+    map.classList.remove(`map--faded`);
+    form.classList.remove(`ad-form--disabled`);
     renderPins(mapPins, DATA);
   }
 };
@@ -162,46 +165,32 @@ mainMapPin.addEventListener(`mousedown`, function (event) {
   }
 });
 
+const roomsAmountSelect = document.querySelector(`#room_number`);
 
-const roomOptions = Array.from(document.querySelector(`#room_number`).options);
-const guestsOptions = Array.from(document.querySelector(`#capacity`).options);
-
-const disableOption = function (el) {
-  el.setAttribute(`disabled`, `disabled`);
+const roomValues = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
 };
 
-const enableOption = function (el) {
-  el.removeAttribute(`disabled`);
-};
+function checkRooms(guestsAmount) {
+  const guestsOptions = Array.from(document.querySelector(`#capacity`).options);
+  guestsOptions.forEach((option) => {
+    option.disabled = true;
+  });
 
-roomOptions.forEach((el) => {
-  if (el.value === `1` && el.hasAttribute(`selected`)) {
-    guestsOptions.forEach((element) => {
-      enableOption(element);
-      if (element.value !== `1`) {
-        disableOption(element);
+
+  roomValues[guestsAmount].forEach(function (roomsAmount) {
+    guestsOptions.forEach(function (option) {
+      if (Number(option.value) === roomsAmount) {
+        option.disabled = false;
+        option.selected = true;
       }
     });
-  } else if (el.value === `2` && el.hasAttribute(`selected`)) {
-    guestsOptions.forEach((element) => {
-      enableOption(element);
-      if (element.value === `3` && element.value === `0`) {
-        disableOption(element);
-      }
-    });
-  } else if (el.value === `3` && el.hasAttribute(`selected`)) {
-    guestsOptions.forEach((element) => {
-      enableOption(element);
-      if (element.value === `0`) {
-        disableOption(element);
-      }
-    });
-  } else if (el.value === `4` && el.hasAttribute(`selected`)) {
-    guestsOptions.forEach((element) => {
-      enableOption(element);
-      if (element.value !== `0`) {
-        disableOption(element);
-      }
-    });
-  }
+  });
+}
+
+roomsAmountSelect.addEventListener(`change`, function (evt) {
+  checkRooms(evt.target.value);
 });
