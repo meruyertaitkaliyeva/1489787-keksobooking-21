@@ -15,11 +15,11 @@ const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0
 const PINWIDTH = 156;
 const PINHEIGHT = 156;
 
-const getRandomNumber = function (min, max) {
+const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const createCardsArray = function (count) {
+const createCardsArray = (count) => {
   const array = [];
   for (let i = 0; i < count; i++) {
     const locationX = getRandomNumber(0, 1000);
@@ -57,7 +57,7 @@ const map = document.querySelector(`.map`);
 const mapPins = map.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
-const createPin = function (data) {
+const createPin = (data) => {
   const pinElement = pinTemplate.cloneNode(true);
   pinElement.style.left = `${data.location.x}px`;
   pinElement.style.top = `${data.location.y}px`;
@@ -66,15 +66,13 @@ const createPin = function (data) {
   return pinElement;
 };
 
-const renderPins = function (container, data) {
+const renderPins = (container, data) => {
   data.forEach((element) => {
     container.appendChild(createPin(element));
   });
 };
 
-
 // const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-
 
 // const renderFeatures = function (container, data) {
 //   container.innerHTML = ``;
@@ -98,7 +96,6 @@ const renderPins = function (container, data) {
 //   });
 // };
 
-
 // const createCard = function (data) {
 //   const cardElement = cardTemplate.cloneNode(true);
 //   cardElement.querySelector(`.popup__title`).textContent = data.offer.title;
@@ -121,45 +118,53 @@ const renderPins = function (container, data) {
 // renderCard(mapPins);
 
 const form = document.querySelector(`.ad-form`);
-
 const formFieldsets = document.querySelectorAll(`fieldset`);
-
-formFieldsets.forEach((el) => {
-  el.setAttribute(`disabled`, `disabled`);
-});
-
 const mapFilters = document.querySelectorAll(`.map__filter`);
 
-mapFilters.forEach((el) => {
-  el.setAttribute(`disabled`, `disabled`);
-});
-
-
-const activatePage = function (event) {
-  if (event.button === 0 || event.keyCode === 13) {
-    formFieldsets.forEach((el) => {
-      el.removeAttribute(`disabled`, `disabled`);
-    });
-    mapFilters.forEach((el) => {
-      el.removeAttribute(`disabled`, `disabled`);
-    });
-    map.classList.remove(`map--faded`);
-    form.classList.remove(`ad-form--disabled`);
-    renderPins(mapPins, DATA);
-  }
+const disableElement = (arr) => {
+  arr.forEach((el) => {
+    el.setAttribute(`disabled`, `disabled`);
+  });
 };
 
+const enableElement = (arr) => {
+  arr.forEach((el) => {
+    el.removeAttribute(`disabled`, `disabled`);
+  });
+};
+
+disableElement(formFieldsets);
+disableElement(mapFilters);
+
+const activatePage = () => {
+  map.classList.remove(`map--faded`);
+  form.classList.remove(`ad-form--disabled`);
+  enableElement(formFieldsets);
+  enableElement(mapFilters);
+  renderPins(mapPins, DATA);
+};
 
 const mainMapPin = document.querySelector(`.map__pin--main`);
+const pinAddress = document.querySelector(`#address`);
 const posY = mainMapPin.offsetTop;
 const posX = mainMapPin.offsetLeft;
-const pinAddress = document.querySelector(`#address`);
+
 pinAddress.value = `${posX}, ${posY}`;
+pinAddress.setAttribute(`readonly`, `readonly`);
 
-mainMapPin.addEventListener(`mousedown`, activatePage);
-mainMapPin.addEventListener(`keydown`, activatePage);
+mainMapPin.addEventListener(`mousedown`, (event) => {
+  if (event.button === 0) {
+    activatePage();
+  }
+});
 
-mainMapPin.addEventListener(`mousedown`, function (event) {
+mainMapPin.addEventListener(`keydown`, (event) => {
+  if (event.keyCode === 13) {
+    activatePage();
+  }
+});
+
+mainMapPin.addEventListener(`mousedown`, (event) => {
   if (event.button === 0) {
     pinAddress.value = `${posX + PINWIDTH / 2}, ${posY + PINHEIGHT}`;
   }
@@ -174,23 +179,21 @@ const roomValues = {
   100: [0]
 };
 
-function checkRooms(guestsAmount) {
+const checkRooms = (guestsAmount) => {
   const guestsOptions = Array.from(document.querySelector(`#capacity`).options);
   guestsOptions.forEach((option) => {
     option.disabled = true;
   });
-
-
-  roomValues[guestsAmount].forEach(function (roomsAmount) {
-    guestsOptions.forEach(function (option) {
+  roomValues[guestsAmount].forEach((roomsAmount) => {
+    guestsOptions.forEach((option) => {
       if (Number(option.value) === roomsAmount) {
         option.disabled = false;
         option.selected = true;
       }
     });
   });
-}
+};
 
-roomsAmountSelect.addEventListener(`change`, function (evt) {
+roomsAmountSelect.addEventListener(`change`, (evt) => {
   checkRooms(evt.target.value);
 });
