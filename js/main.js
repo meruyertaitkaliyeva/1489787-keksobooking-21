@@ -12,13 +12,14 @@ const CHECKOUT = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const DESCRIPTION = [`Fusce in nisi mattis`, `Donec eros lacus`, `Quisque ultricies egestas ligula`, `Maecenas dictum vel dui id luctus`, `In a vehicula metus`, `Sed sed ornare nisi`, `Nunc aliquet risus ut nisi`, `Donec facilisis vel tortor vel mollis`];
 const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
+const PINWIDTH = 156;
+const PINHEIGHT = 156;
 
-
-const getRandomNumber = function (min, max) {
+const getRandomNumber = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const createCardsArray = function (count) {
+const createCardsArray = (count) => {
   const array = [];
   for (let i = 0; i < count; i++) {
     const locationX = getRandomNumber(0, 1000);
@@ -52,12 +53,11 @@ const createCardsArray = function (count) {
 const DATA = createCardsArray(8);
 
 const map = document.querySelector(`.map`);
-map.classList.remove(`map--faded`);
 
 const mapPins = map.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
 
-const createPin = function (data) {
+const createPin = (data) => {
   const pinElement = pinTemplate.cloneNode(true);
   pinElement.style.left = `${data.location.x}px`;
   pinElement.style.top = `${data.location.y}px`;
@@ -66,57 +66,134 @@ const createPin = function (data) {
   return pinElement;
 };
 
-const renderPins = function (container, data) {
+const renderPins = (container, data) => {
   data.forEach((element) => {
     container.appendChild(createPin(element));
   });
 };
 
-renderPins(mapPins, DATA);
+// const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
-const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+// const renderFeatures = function (container, data) {
+//   container.innerHTML = ``;
+//   data.forEach((feature) => {
+//     const featureCreateElement = document.createElement(`li`);
+//     featureCreateElement.classList.add(`popup__feature`);
+//     featureCreateElement.classList.add(`popup__feature--` + feature);
+//     container.appendChild(featureCreateElement);
+//   });
+// };
 
+// const renderPhotos = function (container, data) {
+//   container.innerHTML = ``;
+//   data.forEach((src) => {
+//     const photoCreateElement = document.createElement(`img`);
+//     photoCreateElement.classList.add(`popup__photo`);
+//     photoCreateElement.setAttribute(`width`, `45`);
+//     photoCreateElement.setAttribute(`height`, `45`);
+//     photoCreateElement.src = src;
+//     container.appendChild(photoCreateElement);
+//   });
+// };
 
-const renderFeatures = function (container, data) {
-  container.innerHTML = ``;
-  data.forEach((feature) => {
-    const featureCreateElement = document.createElement(`li`);
-    featureCreateElement.classList.add(`popup__feature`);
-    featureCreateElement.classList.add(`popup__feature--` + feature);
-    container.appendChild(featureCreateElement);
+// const createCard = function (data) {
+//   const cardElement = cardTemplate.cloneNode(true);
+//   cardElement.querySelector(`.popup__title`).textContent = data.offer.title;
+//   cardElement.querySelector(`.popup__text--address`).textContent = data.offer.address;
+//   cardElement.querySelector(`.popup__text--price`).textContent = `${data.offer.price}P/ночь`;
+//   cardElement.querySelector(`.popup__type`).textContent = data.offer.type;
+//   cardElement.querySelector(`.popup__text--capacity`).textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
+//   cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
+//   renderFeatures(cardElement.querySelector(`.popup__features`), data.offer.features);
+//   cardElement.querySelector(`.popup__description`).textContent = data.offer.description;
+//   renderPhotos(cardElement.querySelector(`.popup__photos`), data.offer.photos);
+//   cardElement.querySelector(`.popup__avatar`).src = data.author.avatar;
+//   return cardElement;
+// };
+
+// const renderCard = function (container) {
+//   container.appendChild(createCard(DATA[0]));
+// };
+
+// renderCard(mapPins);
+
+const form = document.querySelector(`.ad-form`);
+const formFieldsets = document.querySelectorAll(`fieldset`);
+const mapFilters = document.querySelectorAll(`.map__filter`);
+
+const disableElement = (arr) => {
+  arr.forEach((el) => {
+    el.setAttribute(`disabled`, `disabled`);
   });
 };
 
-const renderPhotos = function (container, data) {
-  container.innerHTML = ``;
-  data.forEach((src) => {
-    const photoCreateElement = document.createElement(`img`);
-    photoCreateElement.classList.add(`popup__photo`);
-    photoCreateElement.setAttribute(`width`, `45`);
-    photoCreateElement.setAttribute(`height`, `45`);
-    photoCreateElement.src = src;
-    container.appendChild(photoCreateElement);
+const enableElement = (arr) => {
+  arr.forEach((el) => {
+    el.removeAttribute(`disabled`, `disabled`);
   });
 };
 
+disableElement(formFieldsets);
+disableElement(mapFilters);
 
-const createCard = function (data) {
-  const cardElement = cardTemplate.cloneNode(true);
-  cardElement.querySelector(`.popup__title`).textContent = data.offer.title;
-  cardElement.querySelector(`.popup__text--address`).textContent = data.offer.address;
-  cardElement.querySelector(`.popup__text--price`).textContent = `${data.offer.price}P/ночь`;
-  cardElement.querySelector(`.popup__type`).textContent = data.offer.type;
-  cardElement.querySelector(`.popup__text--capacity`).textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
-  cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
-  renderFeatures(cardElement.querySelector(`.popup__features`), data.offer.features);
-  cardElement.querySelector(`.popup__description`).textContent = data.offer.description;
-  renderPhotos(cardElement.querySelector(`.popup__photos`), data.offer.photos);
-  cardElement.querySelector(`.popup__avatar`).src = data.author.avatar;
-  return cardElement;
+const activatePage = () => {
+  map.classList.remove(`map--faded`);
+  form.classList.remove(`ad-form--disabled`);
+  enableElement(formFieldsets);
+  enableElement(mapFilters);
+  renderPins(mapPins, DATA);
 };
 
-const renderCard = function (container) {
-  container.appendChild(createCard(DATA[0]));
+const mainMapPin = document.querySelector(`.map__pin--main`);
+const pinAddress = document.querySelector(`#address`);
+const posY = mainMapPin.offsetTop;
+const posX = mainMapPin.offsetLeft;
+
+pinAddress.value = `${posX}, ${posY}`;
+pinAddress.setAttribute(`readonly`, `readonly`);
+
+mainMapPin.addEventListener(`mousedown`, (event) => {
+  if (event.button === 0) {
+    activatePage();
+  }
+});
+
+mainMapPin.addEventListener(`keydown`, (event) => {
+  if (event.keyCode === 13) {
+    activatePage();
+  }
+});
+
+mainMapPin.addEventListener(`mousedown`, (event) => {
+  if (event.button === 0) {
+    pinAddress.value = `${posX + PINWIDTH / 2}, ${posY + PINHEIGHT}`;
+  }
+});
+
+const roomsAmountSelect = document.querySelector(`#room_number`);
+
+const roomValues = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
 };
 
-renderCard(mapPins);
+const checkRooms = (guestsAmount) => {
+  const guestsOptions = Array.from(document.querySelector(`#capacity`).options);
+  guestsOptions.forEach((option) => {
+    option.disabled = true;
+  });
+  roomValues[guestsAmount].forEach((roomsAmount) => {
+    guestsOptions.forEach((option) => {
+      if (Number(option.value) === roomsAmount) {
+        option.disabled = false;
+        option.selected = true;
+      }
+    });
+  });
+};
+
+roomsAmountSelect.addEventListener(`change`, (evt) => {
+  checkRooms(evt.target.value);
+});
