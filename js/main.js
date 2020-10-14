@@ -221,60 +221,28 @@ roomsAmountSelect.addEventListener(`change`, (evt) => {
   checkRooms(evt.target.value);
 });
 
-const removeMinPrice = (el) => {
-  el.removeAttribute(`min`);
-  el.removeAttribute(`placeholder`);
+const housingTypeSelect = document.querySelector(`#type`);
+const housingPrice = document.querySelector(`#price`);
+
+const mapTypeOfPrice = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
 };
 
-const setMinPrice = (el, value) => {
-  el.setAttribute(`min`, value);
-  el.setAttribute(`placeholder`, value);
-};
-
-const houseTypeSelect = document.querySelector(`#type`);
-
-const setMinHousePrice = () => {
-  const houseOption = Array.from(document.querySelector(`#type`).options);
-  const housePrice = document.querySelector(`#price`);
-  houseOption.forEach((el) => {
-    if (el === houseOption[0]) {
-      removeMinPrice(housePrice);
-      setMinPrice(housePrice, `0`);
-    } else if (el === houseOption[1]) {
-      removeMinPrice(housePrice);
-      setMinPrice(housePrice, `1000`);
-    } else if (el === houseOption[2]) {
-      removeMinPrice(housePrice);
-      setMinPrice(housePrice, `5000`);
-    } else if (el === houseOption[3]) {
-      removeMinPrice(housePrice);
-      setMinPrice(housePrice, `10000`);
-    }
-  });
-};
-
-houseTypeSelect.addEventListener(`change`, (evt) => {
-  setMinHousePrice(evt.target.value);
+housingTypeSelect.addEventListener(`change`, (evt) => {
+  housingPrice.min = mapTypeOfPrice[evt.target.value];
+  housingPrice.placeholder = mapTypeOfPrice[evt.target.value];
 });
 
-const timeinSelect = document.querySelector(`#timein`);
+const timeinOptions = document.querySelector(`#timein`);
+const timeoutOptions = document.querySelector(`#timeout`);
 
-const checkTime = () => {
-  const timeinOptions = Array.from(document.querySelector(`#timein`).options);
-  const timeoutOptions = Array.from(document.querySelector(`#timeout`).options);
-  timeoutOptions.forEach((outOption) => {
-    outOption.disabled = true;
-  });
-  timeinOptions.forEach((inOption) => {
-    timeoutOptions.forEach((outOption) => {
-      if (inOption.value === outOption.value) {
-        outOption.disabled = false;
-        outOption.selected = true;
-      }
-    });
-  });
-};
+timeinOptions.addEventListener(`change`, () => {
+  timeoutOptions.value = timeinOptions.value;
+});
 
-timeinSelect.addEventListener(`change`, (evt) => {
-  checkTime(evt.target.value);
+timeoutOptions.addEventListener(`change`, () => {
+  timeinOptions.value = timeoutOptions.value;
 });
