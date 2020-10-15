@@ -51,11 +51,71 @@ const createCardsArray = (count) => {
 };
 
 const DATA = createCardsArray(8);
-
 const map = document.querySelector(`.map`);
-
 const mapPins = map.querySelector(`.map__pins`);
 const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+
+const renderFeatures = (container, data) => {
+  container.innerHTML = ``;
+  data.forEach((feature) => {
+    const featureCreateElement = document.createElement(`li`);
+    featureCreateElement.classList.add(`popup__feature`);
+    featureCreateElement.classList.add(`popup__feature--` + feature);
+    container.appendChild(featureCreateElement);
+  });
+};
+
+const renderPhotos = (container, data) => {
+  container.innerHTML = ``;
+  data.forEach((src) => {
+    const photoCreateElement = document.createElement(`img`);
+    photoCreateElement.classList.add(`popup__photo`);
+    photoCreateElement.setAttribute(`width`, `45`);
+    photoCreateElement.setAttribute(`height`, `45`);
+    photoCreateElement.src = src;
+    container.appendChild(photoCreateElement);
+  });
+};
+
+const deleteCard = (el) => {
+  el.remove();
+};
+
+
+const createCard = (data) => {
+  const cardElement = cardTemplate.cloneNode(true);
+  const closeCard = cardElement.querySelector(`.popup__close`);
+  cardElement.querySelector(`.popup__title`).textContent = data.offer.title;
+  cardElement.querySelector(`.popup__text--address`).textContent = data.offer.address;
+  cardElement.querySelector(`.popup__text--price`).textContent = `${data.offer.price}P/ночь`;
+  cardElement.querySelector(`.popup__type`).textContent = data.offer.type;
+  cardElement.querySelector(`.popup__text--capacity`).textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
+  cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
+  renderFeatures(cardElement.querySelector(`.popup__features`), data.offer.features);
+  cardElement.querySelector(`.popup__description`).textContent = data.offer.description;
+  renderPhotos(cardElement.querySelector(`.popup__photos`), data.offer.photos);
+  cardElement.querySelector(`.popup__avatar`).src = data.author.avatar;
+
+  closeCard.addEventListener(`click`, () => {
+    deleteCard(cardElement);
+  });
+  map.addEventListener(`keydown`, (event) => {
+    if (event.keyCode === 27) {
+      deleteCard(cardElement);
+    }
+  });
+
+  return cardElement;
+};
+
+const renderCard = (data) => {
+  const card = document.querySelector(`.map__card`);
+  if (card) {
+    deleteCard(card);
+  }
+  map.appendChild(createCard(data));
+};
 
 const createPin = (data) => {
   const pinElement = pinTemplate.cloneNode(true);
@@ -63,6 +123,10 @@ const createPin = (data) => {
   pinElement.style.top = `${data.location.y}px`;
   pinElement.querySelector(`img`).src = data.author.avatar;
   pinElement.querySelector(`img`).alt = data.offer.title;
+
+  pinElement.addEventListener(`click`, () => {
+    renderCard(data);
+  });
   return pinElement;
 };
 
@@ -71,51 +135,6 @@ const renderPins = (container, data) => {
     container.appendChild(createPin(element));
   });
 };
-
-// const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
-
-// const renderFeatures = function (container, data) {
-//   container.innerHTML = ``;
-//   data.forEach((feature) => {
-//     const featureCreateElement = document.createElement(`li`);
-//     featureCreateElement.classList.add(`popup__feature`);
-//     featureCreateElement.classList.add(`popup__feature--` + feature);
-//     container.appendChild(featureCreateElement);
-//   });
-// };
-
-// const renderPhotos = function (container, data) {
-//   container.innerHTML = ``;
-//   data.forEach((src) => {
-//     const photoCreateElement = document.createElement(`img`);
-//     photoCreateElement.classList.add(`popup__photo`);
-//     photoCreateElement.setAttribute(`width`, `45`);
-//     photoCreateElement.setAttribute(`height`, `45`);
-//     photoCreateElement.src = src;
-//     container.appendChild(photoCreateElement);
-//   });
-// };
-
-// const createCard = function (data) {
-//   const cardElement = cardTemplate.cloneNode(true);
-//   cardElement.querySelector(`.popup__title`).textContent = data.offer.title;
-//   cardElement.querySelector(`.popup__text--address`).textContent = data.offer.address;
-//   cardElement.querySelector(`.popup__text--price`).textContent = `${data.offer.price}P/ночь`;
-//   cardElement.querySelector(`.popup__type`).textContent = data.offer.type;
-//   cardElement.querySelector(`.popup__text--capacity`).textContent = `${data.offer.rooms} комнаты для ${data.offer.guests} гостей`;
-//   cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${data.offer.checkin}, выезд до ${data.offer.checkout}`;
-//   renderFeatures(cardElement.querySelector(`.popup__features`), data.offer.features);
-//   cardElement.querySelector(`.popup__description`).textContent = data.offer.description;
-//   renderPhotos(cardElement.querySelector(`.popup__photos`), data.offer.photos);
-//   cardElement.querySelector(`.popup__avatar`).src = data.author.avatar;
-//   return cardElement;
-// };
-
-// const renderCard = function (container) {
-//   container.appendChild(createCard(DATA[0]));
-// };
-
-// renderCard(mapPins);
 
 const form = document.querySelector(`.ad-form`);
 const formFieldsets = document.querySelectorAll(`fieldset`);
@@ -150,19 +169,23 @@ const posY = mainMapPin.offsetTop;
 const posX = mainMapPin.offsetLeft;
 
 pinAddress.value = `${posX}, ${posY}`;
-pinAddress.setAttribute(`readonly`, `readonly`);
 
-mainMapPin.addEventListener(`mousedown`, (event) => {
+const onMainPinMouseDown = (event) => {
   if (event.button === 0) {
     activatePage();
   }
-});
+  mainMapPin.removeEventListener(`mousedown`, onMainPinMouseDown);
+};
 
-mainMapPin.addEventListener(`keydown`, (event) => {
+const onMainPinKeyDown = (event) => {
   if (event.keyCode === 13) {
     activatePage();
   }
-});
+  mainMapPin.removeEventListener(`keydown`, onMainPinKeyDown);
+};
+
+mainMapPin.addEventListener(`mousedown`, onMainPinMouseDown);
+mainMapPin.addEventListener(`keydown`, onMainPinKeyDown);
 
 mainMapPin.addEventListener(`mousedown`, (event) => {
   if (event.button === 0) {
@@ -196,4 +219,30 @@ const checkRooms = (guestsAmount) => {
 
 roomsAmountSelect.addEventListener(`change`, (evt) => {
   checkRooms(evt.target.value);
+});
+
+const housingTypeSelect = document.querySelector(`#type`);
+const housingPrice = document.querySelector(`#price`);
+
+const mapTypeOfPrice = {
+  bungalow: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+
+housingTypeSelect.addEventListener(`change`, (evt) => {
+  housingPrice.min = mapTypeOfPrice[evt.target.value];
+  housingPrice.placeholder = mapTypeOfPrice[evt.target.value];
+});
+
+const timeinOptions = document.querySelector(`#timein`);
+const timeoutOptions = document.querySelector(`#timeout`);
+
+timeinOptions.addEventListener(`change`, () => {
+  timeoutOptions.value = timeinOptions.value;
+});
+
+timeoutOptions.addEventListener(`change`, () => {
+  timeinOptions.value = timeoutOptions.value;
 });
