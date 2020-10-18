@@ -18,34 +18,36 @@
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
 
-  window.createCardsArray = (count) => {
-    const array = [];
-    for (let i = 0; i < count; i++) {
-      const locationX = getRandomNumber(0, 1000);
-      const locationY = getRandomNumber(130, 630);
-      array[i] = {
-        author: {
-          avatar: `img/avatars/user0${i + 1}.png`
-        },
-        offer: {
-          title: TITLE[getRandomNumber(0, TITLE.length - 1)],
-          address: `${locationX}, ${locationY}`,
-          price: getRandomNumber(1000, 100000),
-          type: TYPE[Object.keys(TYPE)[Math.floor(Math.random() * Object.keys(TYPE).length)]],
-          rooms: getRandomNumber(1, 10),
-          guests: getRandomNumber(1, 20),
-          checkin: CHECKIN[getRandomNumber(0, CHECKIN.length - 1)],
-          checkout: CHECKOUT[getRandomNumber(0, CHECKOUT.length - 1)],
-          features: FEATURES.slice(0, getRandomNumber(0, FEATURES.length - 1)),
-          description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length - 1)],
-          photos: PHOTOS.slice(0, getRandomNumber(0, PHOTOS.length - 1))
-        },
-        location: {
-          x: locationX,
-          y: locationY
-        }
-      };
+  window.data = {
+    createCardsArray: (count) => {
+      const array = [];
+      for (let i = 0; i < count; i++) {
+        const locationX = getRandomNumber(0, 1000);
+        const locationY = getRandomNumber(130, 630);
+        array[i] = {
+          author: {
+            avatar: `img/avatars/user0${i + 1}.png`
+          },
+          offer: {
+            title: TITLE[getRandomNumber(0, TITLE.length - 1)],
+            address: `${locationX}, ${locationY}`,
+            price: getRandomNumber(1000, 100000),
+            type: TYPE[Object.keys(TYPE)[Math.floor(Math.random() * Object.keys(TYPE).length)]],
+            rooms: getRandomNumber(1, 10),
+            guests: getRandomNumber(1, 20),
+            checkin: CHECKIN[getRandomNumber(0, CHECKIN.length - 1)],
+            checkout: CHECKOUT[getRandomNumber(0, CHECKOUT.length - 1)],
+            features: FEATURES.slice(0, getRandomNumber(0, FEATURES.length - 1)),
+            description: DESCRIPTION[getRandomNumber(0, DESCRIPTION.length - 1)],
+            photos: PHOTOS.slice(0, getRandomNumber(0, PHOTOS.length - 1))
+          },
+          location: {
+            x: locationX,
+            y: locationY
+          }
+        };
+      }
+      return array;
     }
-    return array;
   };
 })();

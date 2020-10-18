@@ -6,7 +6,7 @@
   const formFieldsets = document.querySelectorAll(`fieldset`);
   const mapFilters = document.querySelectorAll(`.map__filter`);
   const mainMapPin = document.querySelector(`.map__pin--main`);
-  const DATA = window.createCardsArray(8);
+  const DATA = window.data.createCardsArray(8);
   const mapPins = map.querySelector(`.map__pins`);
 
   const disableElement = (arr) => {
