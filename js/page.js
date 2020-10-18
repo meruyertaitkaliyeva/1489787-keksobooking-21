@@ -29,7 +29,7 @@
     form.classList.remove(`ad-form--disabled`);
     enableElement(formFieldsets);
     enableElement(mapFilters);
-    window.renderPins(mapPins, DATA);
+    window.pin.renderPins(mapPins, DATA);
   };
 
   const onMainPinMouseDown = (event) => {
