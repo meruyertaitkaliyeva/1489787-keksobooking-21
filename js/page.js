@@ -1,13 +1,11 @@
 'use strict';
 
 (function () {
-  const map = document.querySelector(`.map`);
   const form = document.querySelector(`.ad-form`);
   const formFieldsets = document.querySelectorAll(`fieldset`);
   const mapFilters = document.querySelectorAll(`.map__filter`);
-  const mainMapPin = document.querySelector(`.map__pin--main`);
   const DATA = window.data.createCardsArray(8);
-  const mapPins = map.querySelector(`.map__pins`);
+  const mapPins = window.selectors.map.querySelector(`.map__pins`);
 
   const disableElement = (arr) => {
     arr.forEach((el) => {
@@ -25,7 +23,7 @@
   disableElement(mapFilters);
 
   const activatePage = () => {
-    map.classList.remove(`map--faded`);
+    window.selectors.map.classList.remove(`map--faded`);
     form.classList.remove(`ad-form--disabled`);
     enableElement(formFieldsets);
     enableElement(mapFilters);
@@ -36,16 +34,16 @@
     if (event.button === 0) {
       activatePage();
     }
-    mainMapPin.removeEventListener(`mousedown`, onMainPinMouseDown);
+    window.selectors.mainPin.removeEventListener(`mousedown`, onMainPinMouseDown);
   };
 
   const onMainPinKeyDown = (event) => {
     if (event.keyCode === 13) {
       activatePage();
     }
-    mainMapPin.removeEventListener(`keydown`, onMainPinKeyDown);
+    window.selectors.mainPin.removeEventListener(`keydown`, onMainPinKeyDown);
   };
 
-  mainMapPin.addEventListener(`mousedown`, onMainPinMouseDown);
-  mainMapPin.addEventListener(`keydown`, onMainPinKeyDown);
+  window.selectors.mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
+  window.selectors.mainPin.addEventListener(`keydown`, onMainPinKeyDown);
 })();

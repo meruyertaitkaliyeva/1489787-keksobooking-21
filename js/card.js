@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  const map = document.querySelector(`.map`);
   const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
   const renderFeatures = (container, data) => {
@@ -47,7 +46,7 @@
     closeCard.addEventListener(`click`, () => {
       deleteCard(cardElement);
     });
-    map.addEventListener(`keydown`, (event) => {
+    window.selectors.map.addEventListener(`keydown`, (event) => {
       if (event.keyCode === 27) {
         deleteCard(cardElement);
       }
@@ -62,7 +61,7 @@
       if (card) {
         deleteCard(card);
       }
-      map.appendChild(createCard(data));
+      window.selectors.map.appendChild(createCard(data));
     }
   };
 })();
