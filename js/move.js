@@ -1,16 +1,15 @@
 'use strict';
 
 (function () {
-  const map = window.selectors.map;
-  const pin = window.selectors.mainPin;
-  const mapCoords = map.getBoundingClientRect();
-  const mapLimits = {
-    top: 130,
-    right: mapCoords.right,
-    bottom: 630,
-    left: mapCoords.left
-  };
-  pin.addEventListener(`mousedown`, (evt) => {
+  const PINWIDTH = 156;
+  const map = document.querySelector(`.map`);
+  const POSITION_MIN_X = 0;
+  const POSITION_MAX_X = map.clientWidth - (PINWIDTH / 2);
+  const POSITION_MIN_Y = 130;
+  const POSITION_MAX_Y = 630;
+  const mainPin = document.querySelector(`.map__pin--main`);
+
+  mainPin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();
 
     let startCoords = {
@@ -18,10 +17,25 @@
       y: evt.clientY
     };
 
-    const onMouseMove = function (moveEvt) {
+    const checkPosition = (coords) => {
+      if (coords.x <= POSITION_MIN_X) {
+        coords.x = POSITION_MIN_X;
+      }
+      if (coords.x >= POSITION_MAX_X) {
+        coords.x = POSITION_MAX_X;
+      }
+      if (coords.y <= POSITION_MIN_Y) {
+        coords.y = POSITION_MIN_Y;
+      }
+      if (coords.y >= POSITION_MAX_Y) {
+        coords.y = POSITION_MAX_Y;
+      }
+    };
+
+    const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
 
-      const shift = {
+      let shift = {
         x: startCoords.x - moveEvt.clientX,
         y: startCoords.y - moveEvt.clientY
       };
@@ -31,22 +45,16 @@
         y: moveEvt.clientY
       };
 
-      pin.style.top = (pin.offsetTop - shift.y) + `px`;
-      pin.style.left = (pin.offsetLeft - shift.x) + `px`;
+      let newCoords = {
+        x: mainPin.offsetLeft - shift.x,
+        y: mainPin.offsetTop - shift.y
+      };
 
-      if ((pin.offsetTop - shift.y) < mapLimits.top) {
-        pin.style.top = mapLimits.top + `px`;
-      } else if ((pin.offsetTop - shift.y) > mapLimits.bottom) {
-        pin.style.top = mapLimits.bottom + `px`;
-      }
+      checkPosition(newCoords);
 
-      if ((pin.offsetLeft - shift.x) < mapLimits.left) {
-        pin.style.left = mapLimits.left + `px`;
-      } else if ((pin.offsetLeft - shift.x) > mapLimits.right) {
-        pin.style.right = mapLimits.right + `px`;
-      }
+      mainPin.style.top = newCoords.y + `px`;
+      mainPin.style.left = newCoords.x + `px`;
     };
-
     const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
 

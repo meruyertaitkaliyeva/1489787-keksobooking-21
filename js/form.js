@@ -3,19 +3,20 @@
 (function () {
   const PINWIDTH = 156;
   const PINHEIGHT = 156;
+  const mainPin = document.querySelector(`.map__pin--main`);
   const pinAddress = document.querySelector(`#address`);
-  pinAddress.value = `${window.selectors.mainPin.offsetLeft}, ${window.selectors.mainPin.offsetTop}`;
+  pinAddress.value = `${mainPin.offsetLeft}, ${mainPin.offsetTop}`;
   const roomsAmountSelect = document.querySelector(`#room_number`);
 
   const setPinAddress = (event) => {
     if (event.button === 0) {
-      pinAddress.value = `${window.selectors.mainPin.offsetLeft + PINWIDTH / 2}, ${window.selectors.mainPin.offsetTop + PINHEIGHT}`;
+      pinAddress.value = `${mainPin.offsetLeft + PINWIDTH / 2}, ${mainPin.offsetTop + PINHEIGHT}`;
     }
   };
 
-  window.selectors.mainPin.addEventListener(`mousedown`, setPinAddress);
+  mainPin.addEventListener(`mousedown`, setPinAddress);
 
-  window.selectors.mainPin.addEventListener(`mouseup`, setPinAddress);
+  mainPin.addEventListener(`mouseup`, setPinAddress);
 
   const roomValues = {
     1: [1],
