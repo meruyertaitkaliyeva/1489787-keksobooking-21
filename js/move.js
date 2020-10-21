@@ -1,13 +1,12 @@
 'use strict';
 
 (function () {
-  const PINWIDTH = 156;
   const map = document.querySelector(`.map`);
-  const POSITION_MIN_X = 0;
-  const POSITION_MAX_X = map.clientWidth - (PINWIDTH / 2);
-  const POSITION_MIN_Y = 130;
-  const POSITION_MAX_Y = 630;
   const mainPin = document.querySelector(`.map__pin--main`);
+  const POSITION_MIN_X = 0 - (mainPin.offsetWidth / 2);
+  const POSITION_MAX_X = map.clientWidth - (mainPin.offsetWidth / 2);
+  const POSITION_MIN_Y = 130 - mainPin.offsetHeight;
+  const POSITION_MAX_Y = 630;
 
   mainPin.addEventListener(`mousedown`, (evt) => {
     evt.preventDefault();

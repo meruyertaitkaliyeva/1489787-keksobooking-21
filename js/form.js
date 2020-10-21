@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  const PINWIDTH = 156;
-  const PINHEIGHT = 156;
   const mainPin = document.querySelector(`.map__pin--main`);
   const pinAddress = document.querySelector(`#address`);
   pinAddress.value = `${mainPin.offsetLeft}, ${mainPin.offsetTop}`;
@@ -10,7 +8,7 @@
 
   const setPinAddress = (event) => {
     if (event.button === 0) {
-      pinAddress.value = `${mainPin.offsetLeft + PINWIDTH / 2}, ${mainPin.offsetTop + PINHEIGHT}`;
+      pinAddress.value = `${Math.floor(mainPin.offsetLeft + mainPin.offsetWidth / 2)}, ${mainPin.offsetTop - 130 + mainPin.offsetHeight}`;
     }
   };
 
