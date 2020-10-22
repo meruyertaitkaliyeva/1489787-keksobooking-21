@@ -1,12 +1,20 @@
 'use strict';
 
 (function () {
+  const mainPin = document.querySelector(`.map__pin--main`);
   const pinAddress = document.querySelector(`#address`);
-  const mainMapPin = document.querySelector(`.map__pin--main`);
-  const posY = mainMapPin.offsetTop;
-  const posX = mainMapPin.offsetLeft;
-  pinAddress.value = `${posX}, ${posY}`;
+  pinAddress.value = `${mainPin.offsetLeft}, ${mainPin.offsetTop}`;
   const roomsAmountSelect = document.querySelector(`#room_number`);
+
+  const setPinAddress = (event) => {
+    if (event.button === 0) {
+      pinAddress.value = `${Math.floor(mainPin.offsetLeft + mainPin.offsetWidth / 2)}, ${mainPin.offsetTop - 130 + mainPin.offsetHeight}`;
+    }
+  };
+
+  mainPin.addEventListener(`mousedown`, setPinAddress);
+
+  mainPin.addEventListener(`mouseup`, setPinAddress);
 
   const roomValues = {
     1: [1],

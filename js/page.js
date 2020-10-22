@@ -2,10 +2,10 @@
 
 (function () {
   const map = document.querySelector(`.map`);
+  const mainPin = document.querySelector(`.map__pin--main`);
   const form = document.querySelector(`.ad-form`);
   const formFieldsets = document.querySelectorAll(`fieldset`);
   const mapFilters = document.querySelectorAll(`.map__filter`);
-  const mainMapPin = document.querySelector(`.map__pin--main`);
   const DATA = window.data.createCardsArray(8);
   const mapPins = map.querySelector(`.map__pins`);
 
@@ -36,16 +36,16 @@
     if (event.button === 0) {
       activatePage();
     }
-    mainMapPin.removeEventListener(`mousedown`, onMainPinMouseDown);
+    mainPin.removeEventListener(`mousedown`, onMainPinMouseDown);
   };
 
   const onMainPinKeyDown = (event) => {
     if (event.keyCode === 13) {
       activatePage();
     }
-    mainMapPin.removeEventListener(`keydown`, onMainPinKeyDown);
+    mainPin.removeEventListener(`keydown`, onMainPinKeyDown);
   };
 
-  mainMapPin.addEventListener(`mousedown`, onMainPinMouseDown);
-  mainMapPin.addEventListener(`keydown`, onMainPinKeyDown);
+  mainPin.addEventListener(`mousedown`, onMainPinMouseDown);
+  mainPin.addEventListener(`keydown`, onMainPinKeyDown);
 })();
