@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  const MAX_PIN_COUNT = 8;
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const createPin = (data) => {
     const pinElement = pinTemplate.cloneNode(true);
@@ -16,10 +17,10 @@
   };
 
   window.pin = {
-    renderPins: (container, data) => {
-      data.forEach((element) => {
-        container.appendChild(createPin(element));
-      });
+    renderPins: (container, pin) => {
+      for (let i = 0; i < MAX_PIN_COUNT; i++) {
+        container.appendChild(createPin(pin[i]));
+      }
     }
   };
 })();
