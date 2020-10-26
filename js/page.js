@@ -69,19 +69,19 @@
     document.body.insertAdjacentElement(`afterbegin`, popup);
   };
 
-  const removePopup = (popup) => {
-    popup.style = `display: none`;
+  const removePopup = () => {
+    showPopup.remove();
   };
 
-  const escPopup = (event, popup) => {
+  const escPopup = (event) => {
     if (event.keyCode === 13) {
-      removePopup(popup);
+      removePopup();
     }
   };
 
-  const closePopup = (event, popup) => {
+  const closePopup = (event) => {
     if (event.target === document) {
-      removePopup(popup);
+      removePopup();
     }
   };
 
@@ -95,11 +95,9 @@
     showPopup(errorPopup);
   };
 
-  document.addEventListener(`keydown`, escPopup(successPopup));
-  document.addEventListener(`keydown`, escPopup(errorPopup));
-  document.addEventListener(`click`, closePopup(successPopup));
-  document.addEventListener(`click`, closePopup(errorPopup));
-  errorCloseButton.addEventListener(`click`, closePopup(errorPopup));
+  document.addEventListener(`keydown`, escPopup);
+  document.addEventListener(`click`, closePopup);
+  errorCloseButton.addEventListener(`click`, closePopup);
 
 
   const adForm = document.querySelector(`.ad-form`);
