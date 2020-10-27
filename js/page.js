@@ -65,24 +65,22 @@
   const errorPopup = errorTemplate.cloneNode(true);
   const errorCloseButton = errorPopup.querySelector(`.error__button`);
 
-  const showPopup = (popup) => {
-    document.body.insertAdjacentElement(`afterbegin`, popup);
-  };
-
   const removePopup = () => {
-    showPopup.remove();
+    successPopup.remove();
+    errorPopup.remove();
   };
 
   const escPopup = (event) => {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 27) {
       removePopup();
     }
   };
 
-  const closePopup = (event) => {
-    if (event.target === document) {
-      removePopup();
-    }
+  const showPopup = (popup) => {
+    document.body.insertAdjacentElement(`afterbegin`, popup);
+    document.addEventListener(`keydown`, escPopup);
+    document.addEventListener(`click`, removePopup);
+    errorCloseButton.addEventListener(`click`, removePopup);
   };
 
   const onSuccessUpload = () => {
@@ -95,12 +93,9 @@
     showPopup(errorPopup);
   };
 
-  document.addEventListener(`keydown`, escPopup);
-  document.addEventListener(`click`, closePopup);
-  errorCloseButton.addEventListener(`click`, closePopup);
-
 
   const adForm = document.querySelector(`.ad-form`);
+
   const submitHandler = (evt) => {
     window.server.upload(new FormData(adForm), onSuccessUpload, onErrorUpload);
     evt.preventDefault();
