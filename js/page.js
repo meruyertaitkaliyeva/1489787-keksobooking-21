@@ -8,6 +8,7 @@
   const mapFilters = document.querySelectorAll(`.map__filter`);
   const mapPins = map.querySelector(`.map__pins`);
 
+
   const disableElement = (arr) => {
     arr.forEach((el) => {
       el.setAttribute(`disabled`, `disabled`);
@@ -23,9 +24,26 @@
   disableElement(formFieldsets);
   disableElement(mapFilters);
 
+  let pins = [];
+
   const onSuccessLoad = (data) => {
+    pins = data;
     window.pin.renderPins(mapPins, data);
   };
+
+  const updatePins = () => {
+    const card = document.querySelector(`.map__card`);
+    if (card) {
+      card.remove();
+    }
+    window.reset.removePins();
+    window.pin.renderPins(mapPins, window.filter.applyFilter(pins));
+  };
+
+  const filters = document.querySelector(`.map__filters`);
+
+  filters.addEventListener(`change`, updatePins);
+
 
   const onErrorLoad = (errorMessage) => {
     const errorLoadTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
@@ -85,8 +103,7 @@
 
   const onSuccessUpload = () => {
     showPopup(successPopup);
-    adForm.reset();
-    adForm.classList.add(`ad-form--disabled`);
+    window.reset.disactivatePage();
   };
 
   const onErrorUpload = () => {
@@ -94,12 +111,10 @@
   };
 
 
-  const adForm = document.querySelector(`.ad-form`);
-
   const submitHandler = (evt) => {
-    window.server.upload(new FormData(adForm), onSuccessUpload, onErrorUpload);
+    window.server.upload(new FormData(form), onSuccessUpload, onErrorUpload);
     evt.preventDefault();
   };
 
-  adForm.addEventListener(`submit`, submitHandler);
+  form.addEventListener(`submit`, submitHandler);
 })();
