@@ -12,9 +12,7 @@
     }
   };
 
-  mainPin.addEventListener(`mousedown`, setPinAddress);
-
-  mainPin.addEventListener(`mouseup`, setPinAddress);
+  mainPin.addEventListener(`click`, setPinAddress);
 
   const roomValues = {
     1: [1],
