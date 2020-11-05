@@ -37,7 +37,7 @@
       card.remove();
     }
     window.reset.removePins();
-    window.pin.renderPins(mapPins, window.filter.applyFilter(pins));
+    window.debounce(window.pin.renderPins(mapPins, window.filter.applyFilter(pins)));
   };
 
   const filters = document.querySelector(`.map__filters`);
