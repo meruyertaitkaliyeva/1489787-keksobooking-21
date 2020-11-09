@@ -10,8 +10,13 @@
     pinElement.querySelector(`img`).alt = data.offer.title;
 
     pinElement.addEventListener(`click`, () => {
+      if (document.querySelector(`.map__pin--active`)) {
+        document.querySelector(`.map__pin--active`).remove();
+      }
+      pinElement.classList.add(`map__pin--active`);
       window.card.renderCard(data);
     });
+
     return pinElement;
   };
 

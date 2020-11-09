@@ -44,12 +44,19 @@
     renderPhotos(cardElement.querySelector(`.popup__photos`), data.offer.photos);
     cardElement.querySelector(`.popup__avatar`).src = data.author.avatar;
 
+    const removeCard = (card) => {
+      deleteCard(card);
+      if (document.querySelector(`.map__pin--active`)) {
+        document.querySelector(`.map__pin--active`).remove();
+      }
+    };
+
     closeCard.addEventListener(`click`, () => {
-      deleteCard(cardElement);
+      removeCard(cardElement);
     });
     map.addEventListener(`keydown`, (event) => {
       if (event.keyCode === 27) {
-        deleteCard(cardElement);
+        removeCard(cardElement);
       }
     });
 
@@ -63,6 +70,13 @@
         deleteCard(card);
       }
       map.appendChild(createCard(data));
+    },
+
+    deleteCard: () => {
+      const card = document.querySelector(`.map__card`);
+      if (card) {
+        deleteCard(card);
+      }
     }
   };
 })();

@@ -25,8 +25,10 @@ window.reset = {
 
   disactivatePage: () => {
     form.reset();
-    resetMainPin();
+    filter.reset();
     window.reset.removePins();
+    resetMainPin();
+    window.card.deleteCard();
     map.classList.add(`map--faded`);
     form.classList.add(`ad-form--disabled`);
     filters.forEach((el) => {

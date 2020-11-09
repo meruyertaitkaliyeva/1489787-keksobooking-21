@@ -31,10 +31,7 @@ const onSuccessLoad = (data) => {
 };
 
 const updatePins = () => {
-  const card = document.querySelector(`.map__card`);
-  if (card) {
-    card.remove();
-  }
+  window.card.deleteCard();
   window.reset.removePins();
   window.debounce(window.pin.renderPins(mapPins, window.filter.applyFilter(pins)));
 };
@@ -109,6 +106,20 @@ const onErrorUpload = () => {
   showPopup(errorPopup);
 };
 
+const resetButton = document.querySelector(`.ad-form__reset`);
+
+const onResetClick = () => {
+  window.reset.disactivatePage();
+};
+
+const onResetKeydown = (event) => {
+  if (event.keyCode === 13) {
+    window.reset.disactivatePage();
+  }
+};
+
+resetButton.addEventListener(`click`, onResetClick);
+resetButton.addEventListener(`keydown`, onResetKeydown);
 
 const submitHandler = (evt) => {
   window.server.upload(new FormData(form), onSuccessUpload, onErrorUpload);
