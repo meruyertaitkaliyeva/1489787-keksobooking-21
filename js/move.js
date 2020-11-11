@@ -1,11 +1,10 @@
 'use strict';
 
-const map = document.querySelector(`.map`);
-const mainPin = document.querySelector(`.map__pin--main`);
-const POSITION_MIN_X = 0 - (mainPin.offsetWidth / 2);
-const POSITION_MAX_X = map.clientWidth - (mainPin.offsetWidth / 2);
-const POSITION_MIN_Y = 130 - mainPin.offsetHeight;
+const POSITION_MIN_X = 0 - (document.querySelector(`.map__pin--main`).offsetWidth / 2);
+const POSITION_MAX_X = document.querySelector(`.map`).clientWidth - (document.querySelector(`.map__pin--main`).offsetWidth / 2);
+const POSITION_MIN_Y = 130 - document.querySelector(`.map__pin--main`).offsetHeight;
 const POSITION_MAX_Y = 630;
+const mainPin = document.querySelector(`.map__pin--main`);
 
 mainPin.addEventListener(`mousedown`, (evt) => {
   evt.preventDefault();
