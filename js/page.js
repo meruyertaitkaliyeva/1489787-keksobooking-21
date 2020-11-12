@@ -54,6 +54,7 @@ const activatePage = () => {
   enableElement(formFieldsets);
   enableElement(mapFilters);
   window.server.load(onSuccessLoad, onErrorLoad);
+  window.checkRooms(document.querySelector(`#room_number`).value);
 };
 
 const onMainPinMouseDown = (event) => {

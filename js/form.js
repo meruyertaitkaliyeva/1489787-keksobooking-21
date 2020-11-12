@@ -20,7 +20,7 @@ const roomValues = {
   100: [0]
 };
 
-const checkRooms = (guestsAmount) => {
+window.checkRooms = (guestsAmount) => {
   const guestsOptions = Array.from(document.querySelector(`#capacity`).options);
   guestsOptions.forEach((option) => {
     option.disabled = true;
@@ -36,7 +36,7 @@ const checkRooms = (guestsAmount) => {
 };
 
 roomsAmountSelect.addEventListener(`change`, (evt) => {
-  checkRooms(evt.target.value);
+  window.checkRooms(evt.target.value);
 });
 
 const housingTypeSelect = document.querySelector(`#type`);
